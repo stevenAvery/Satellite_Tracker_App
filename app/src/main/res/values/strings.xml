@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Satellite_Tracker_App</string>
     <string name="searchHint">ISS (ZARYA)</string>
+    <string name="title_activity_satellite_map">Map</string>
 </resources>

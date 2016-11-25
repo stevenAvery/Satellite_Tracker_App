@@ -1,6 +1,7 @@
 package com.example.savery.satellite_tracker_app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,7 +22,6 @@ public class SelectSatelliteActivity extends Activity {
             new Satellite("AKEBONO (EXOS-D)", "19822"),
             new Satellite("HST", "20580"),
         };
-        //String[] satellites = {"ISS (ZARYA)", "AKEBONO (EXOS-D)", "HST"};
 
         // add list of satellites to lstSatellites
         ListAdapter satellitesAdapter = new SatelliteRowAdapter(this, satellites);
@@ -41,7 +41,16 @@ public class SelectSatelliteActivity extends Activity {
 
     // when a satellite item is clicked
     private void satellitesItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String satellite = String.valueOf(parent.getItemAtPosition(position));
-        Toast.makeText(SelectSatelliteActivity.this, satellite, Toast.LENGTH_LONG).show();
+        Satellite satellite = (Satellite)parent.getItemAtPosition(position);
+
+        Toast.makeText(SelectSatelliteActivity.this, satellite.getName(), Toast.LENGTH_LONG).show();
+
+        // show the satellite location on map
+        Intent showMapIntent = new Intent(SelectSatelliteActivity.this, SatelliteMap.class);
+        showMapIntent.putExtra("name", "Test");
+        showMapIntent.putExtra("latitude", 43.6426);
+        showMapIntent.putExtra("longitude", -79.3871);
+
+        startActivity(showMapIntent);
     }
 }
