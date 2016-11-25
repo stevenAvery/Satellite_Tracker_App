@@ -9,19 +9,25 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class SelectSatelliteActivity extends Activity {
+    SatelliteDBHelper dbHelper;
+    List<Satellite> satellites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_satellite);
 
-        // get satellites from database
-        Satellite[] satellites = {
-            new Satellite("ISS (ZARYA)", "25544"),
-            new Satellite("AKEBONO (EXOS-D)", "19822"),
-            new Satellite("HST", "20580"),
-        };
+        // setup database
+        dbHelper = new SatelliteDBHelper(this);
+        dbHelper.deleteAll();
+        dbHelper.insert(new Satellite("25544", "ISS (ZARYA)"));
+        dbHelper.insert(new Satellite("19822", "AKEBONO (EXOS-D)"));
+        dbHelper.insert(new Satellite("20580", "HST"));
+        dbHelper.insert(new Satellite("41304", "SPINSAT"));
+        satellites = dbHelper.findAll();
 
         // add list of satellites to lstSatellites
         ListAdapter satellitesAdapter = new SatelliteRowAdapter(this, satellites);

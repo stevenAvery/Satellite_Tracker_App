@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 class SatelliteRowAdapter extends ArrayAdapter<Satellite> {
 
-    public SatelliteRowAdapter(Context context, Satellite[] satellites) {
+    public SatelliteRowAdapter(Context context, List<Satellite> satellites) {
         super(context, R.layout.satellite_row, satellites);
     }
 
