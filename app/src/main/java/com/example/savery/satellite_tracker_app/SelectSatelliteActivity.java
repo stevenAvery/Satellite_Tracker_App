@@ -23,7 +23,7 @@ public class SelectSatelliteActivity extends Activity {
         // setup database
         dbHelper = new SatelliteDBHelper(this);
         dbHelper.deleteAll();
-        dbHelper.insert(new Satellite("25544", "ISS (ZARYA)"));
+        dbHelper.insert(new Satellite("25544", "ISS (ZARYA)", "stations"));
         dbHelper.insert(new Satellite("19822", "AKEBONO (EXOS-D)"));
         dbHelper.insert(new Satellite("20580", "HST"));
         dbHelper.insert(new Satellite("41304", "SPINSAT"));
@@ -50,6 +50,11 @@ public class SelectSatelliteActivity extends Activity {
         Satellite satellite = (Satellite)parent.getItemAtPosition(position);
 
         Toast.makeText(SelectSatelliteActivity.this, satellite.getName(), Toast.LENGTH_LONG).show();
+
+        // Get TLE from celestrak.com
+        DownloadTLETask task = new DownloadTLETask(satellite);
+        task.execute();
+
 
         // show the satellite location on map
         Intent showMapIntent = new Intent(SelectSatelliteActivity.this, SatelliteMap.class);
