@@ -55,7 +55,6 @@ public class SelectSatelliteActivity extends Activity {
         DownloadTLETask task = new DownloadTLETask(satellite);
         task.execute();
 
-
         // show the satellite location on map
         Intent showMapIntent = new Intent(SelectSatelliteActivity.this, SatelliteMap.class);
         showMapIntent.putExtra("name", "Test");
@@ -63,5 +62,6 @@ public class SelectSatelliteActivity extends Activity {
         showMapIntent.putExtra("longitude", -79.3871);
 
         startActivity(showMapIntent);
+
     }
 }

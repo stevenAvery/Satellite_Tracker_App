@@ -27,5 +27,4 @@ public class Satellite {
     public String getType() {
         return type;
     }
-
 }
