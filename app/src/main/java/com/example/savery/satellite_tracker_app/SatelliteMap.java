@@ -2,23 +2,35 @@ package com.example.savery.satellite_tracker_app;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Pair;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SatelliteMap extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private double latitude, longitude;
-    private double futureLatitude, futureLongitude;
     private String name;
+    private double lat0, lng0;
+    private String[] tle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +45,9 @@ public class SatelliteMap extends FragmentActivity implements OnMapReadyCallback
         // get information from intent call
         Intent callingIntent = getIntent();
         name = callingIntent.getStringExtra("name");
-        latitude = callingIntent.getDoubleExtra("latitude", 0.0);
-        longitude = callingIntent.getDoubleExtra("longitude", 0.0);
-        futureLatitude = callingIntent.getDoubleExtra("futureLatitude", 0.0);
-        futureLongitude = callingIntent.getDoubleExtra("futureLongitude", 0.0);
+        tle = callingIntent.getStringArrayExtra("tle");
+        lat0 = callingIntent.getDoubleExtra("latitude", 0.0);
+        lng0 = callingIntent.getDoubleExtra("longitude", 0.0);
     }
 
 
@@ -54,15 +65,42 @@ public class SatelliteMap extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker at the satellite location and move the camera
-        LatLng satelliteLatLng = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(satelliteLatLng).title(name));
-        PolylineOptions orbit = new PolylineOptions()
-            .add(satelliteLatLng)
-            .add(new LatLng(futureLatitude, futureLongitude))
+        LatLng satelliteLatLng = new LatLng(lat0, lng0);
+        Marker mMarker = mMap.addMarker(new MarkerOptions().position(satelliteLatLng).title(name));
+        Polyline orbit = mMap.addPolyline(new PolylineOptions()
             .width(10.0f)
-            .color(Color.YELLOW)
-            .geodesic(true);
-        mMap.addPolyline(orbit);
+            .color(Color.BLUE)
+            .geodesic(true));
+
         mMap.moveCamera(CameraUpdateFactory.newLatLng(satelliteLatLng));
+
+        animateMarker(mMarker, orbit);
+    }
+
+    // automatically updates the marker on the map
+    public void animateMarker(final Marker marker, final Polyline orbit) {
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        Projection proj = mMap.getProjection();
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                long elapsed = SystemClock.uptimeMillis() - start;
+
+                Pair<Double, Double> newPos = TLE2LLA.getLLA(tle, 0.0);
+                Pair<Double, Double> newPos1 = TLE2LLA.getLLA(tle, 1.0);
+                List<LatLng> points = new ArrayList<>(Arrays.asList(
+                    new LatLng(newPos.first, newPos.second),
+                    new LatLng(newPos1.first, newPos1.second)
+                ));
+
+                marker.setPosition(new LatLng(newPos.first, newPos.second));
+                orbit.setPoints(points);
+
+                // Post again 2000ms later.
+                handler.postDelayed(this, 2000);
+            }
+        });
     }
 }

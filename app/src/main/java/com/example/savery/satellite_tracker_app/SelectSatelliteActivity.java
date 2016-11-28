@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -177,26 +178,14 @@ public class SelectSatelliteActivity extends Activity {
                 return;
             }
 
-            double futureLatitude, futureLongitude;
-
-            com.example.savery.satellite_tracker_app.sgp.TLE tle = new TLE(result[0], result[1], result[2]);
-            Satelite sat = new Satelite(tle);
-
-            // calculate the vel line
-            sat.calcularVariables(Tiempo.getCurrentUniversalJulianTime(1.0));
-            futureLatitude = sat.latitud;
-            futureLongitude = sat.longitud;
-
-            // calculate the current pos
-            sat.calcularVariables(Tiempo.getCurrentLocalJulianTime());
+            Pair<Double, Double> pos0 = TLE2LLA.getLLA(result, 0.0);
 
             // show the satellite location on map
             Intent showMapIntent = new Intent(SelectSatelliteActivity.this, SatelliteMap.class);
-            showMapIntent.putExtra("name", sat.nombre.substring(2));
-            showMapIntent.putExtra("latitude", sat.latitud);
-            showMapIntent.putExtra("longitude", sat.longitud);
-            showMapIntent.putExtra("futureLongitude", futureLongitude);
-            showMapIntent.putExtra("futureLongitude", futureLongitude);
+            showMapIntent.putExtra("name", result[0].substring(2));
+            showMapIntent.putExtra("tle", result);
+            showMapIntent.putExtra("latitude", pos0.first);
+            showMapIntent.putExtra("longitude", pos0.second);
 
             startActivity(showMapIntent);
         }
