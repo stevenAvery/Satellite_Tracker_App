@@ -28,6 +28,61 @@ public class SatelliteDBHelper extends SQLiteOpenHelper {
 
     public SatelliteDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
+        deleteAll();
+        insert(new Satellite ("25544", "ISS (ZARYA)"));
+        insert(new Satellite ("37820", "TIANGONG 1"));
+        insert(new Satellite ("40314", "SPINSAT"));
+        insert(new Satellite ("40898", "S-CUBE"));
+        insert(new Satellite ("41313", "AGGIESAT 4"));
+        insert(new Satellite ("41314", "BEVO 2"));
+        insert(new Satellite ("41474", "MINXSS"));
+        insert(new Satellite ("41475", "CADRE"));
+        insert(new Satellite ("41476", "STMSAT-1"));
+        insert(new Satellite ("41477", "NODES 2"));
+        insert(new Satellite ("41478", "NODES 1"));
+        insert(new Satellite ("41479", "FLOCK 2E'-1"));
+        insert(new Satellite ("41480", "FLOCK 2E'-3"));
+        insert(new Satellite ("41481", "FLOCK 2E'-2"));
+        insert(new Satellite ("41482", "FLOCK 2E'-4"));
+        insert(new Satellite ("41483", "FLOCK 2E-1"));
+        insert(new Satellite ("41484", "FLOCK 2E-2"));
+        insert(new Satellite ("41485", "LEMUR-2-THERESACONDOR"));
+        insert(new Satellite ("41486", "FLOCK 2E-3"));
+        insert(new Satellite ("41487", "FLOCK 2E-4"));
+        insert(new Satellite ("41488", "LEMUR-2-NICK-ALLAIN"));
+        insert(new Satellite ("41489", "LEMUR-2-KANE"));
+        insert(new Satellite ("41490", "LEMUR-2-JEFF"));
+        insert(new Satellite ("41563", "FLOCK 2E-6"));
+        insert(new Satellite ("41564", "FLOCK 2E-5"));
+        insert(new Satellite ("41565", "FLOCK 2E-7"));
+        insert(new Satellite ("41566", "FLOCK 2E-8"));
+        insert(new Satellite ("41567", "FLOCK 2E'-5"));
+        insert(new Satellite ("41568", "FLOCK 2E'-6"));
+        insert(new Satellite ("41569", "FLOCK 2E'-8"));
+        insert(new Satellite ("41570", "FLOCK 2E'-7"));
+        insert(new Satellite ("41571", "FLOCK 2E-9"));
+        insert(new Satellite ("41572", "FLOCK 2E-10"));
+        insert(new Satellite ("41573", "FLOCK 2E-12"));
+        insert(new Satellite ("41574", "FLOCK 2E-11"));
+        insert(new Satellite ("41575", "FLOCK 2E'-9"));
+        insert(new Satellite ("41576", "FLOCK 2E'-10"));
+        insert(new Satellite ("41577", "FLOCK 2E'-11"));
+        insert(new Satellite ("41578", "FLOCK 2E'-12"));
+        insert(new Satellite ("41670", "PROGRESS-MS 03"));
+        insert(new Satellite ("41761", "FLOCK 2E'-13"));
+        insert(new Satellite ("41762", "FLOCK 2E'-14"));
+        insert(new Satellite ("41763", "FLOCK 2E'-16"));
+        insert(new Satellite ("41764", "FLOCK 2E'-15"));
+        insert(new Satellite ("41765", "TIANGONG-2"));
+        insert(new Satellite ("41769", "FLOCK 2E'-18"));
+        insert(new Satellite ("41776", "FLOCK 2E'-17"));
+        insert(new Satellite ("41777", "FLOCK 2E'-19"));
+        insert(new Satellite ("41782", "FLOCK 2E'-20"));
+        insert(new Satellite ("41818", "CYGNUS OA-5"));
+        insert(new Satellite ("41820", "SOYUZ-MS 02"));
+        insert(new Satellite ("41834", "BANXING-2"));
+        insert(new Satellite ("41864", "SOYUZ-MS 03"));
     }
 
 
@@ -39,7 +94,7 @@ public class SatelliteDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SATELLITES);
-        db.execSQL(DATABASE_CREATE);
+        onCreate(db);
     }
 
     // query the database, finding all products
