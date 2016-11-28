@@ -3,6 +3,7 @@ This app allows the user to view the location of various satellites in real time
 
 # Demo
 After the user selects a satellite from the list, the app will download its TLE from www.space-track.org/. Using the TLE it will calculate the LLA of the satellite  and display it on the map.
+
 ![Demo Gif](demo.gif)
 
 # Detail
