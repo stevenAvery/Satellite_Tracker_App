@@ -147,10 +147,6 @@ public class SelectSatelliteActivity extends Activity {
                 url = new URL(baseURL + query);
                 br = new BufferedReader(new InputStreamReader((url.openStream())));
 
-                //while ((output = br.readLine()) != null) {
-                //    Log.v("TLE", output);
-                //}
-
                 if ((output = br.readLine()) != null) {
                     Log.d("TLE", output);
                     // extract the TLEs from the acquired JSON
@@ -181,15 +177,26 @@ public class SelectSatelliteActivity extends Activity {
                 return;
             }
 
+            double futureLatitude, futureLongitude;
+
             com.example.savery.satellite_tracker_app.sgp.TLE tle = new TLE(result[0], result[1], result[2]);
             Satelite sat = new Satelite(tle);
-            sat.calcularVariables(Tiempo.getCurrentLocalTime());
+
+            // calculate the vel line
+            sat.calcularVariables(Tiempo.getCurrentUniversalJulianTime(1.0));
+            futureLatitude = sat.latitud;
+            futureLongitude = sat.longitud;
+
+            // calculate the current pos
+            sat.calcularVariables(Tiempo.getCurrentLocalJulianTime());
 
             // show the satellite location on map
             Intent showMapIntent = new Intent(SelectSatelliteActivity.this, SatelliteMap.class);
             showMapIntent.putExtra("name", sat.nombre.substring(2));
             showMapIntent.putExtra("latitude", sat.latitud);
             showMapIntent.putExtra("longitude", sat.longitud);
+            showMapIntent.putExtra("futureLongitude", futureLongitude);
+            showMapIntent.putExtra("futureLongitude", futureLongitude);
 
             startActivity(showMapIntent);
         }

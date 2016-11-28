@@ -1,6 +1,7 @@
 package com.example.savery.satellite_tracker_app;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -10,11 +11,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class SatelliteMap extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private double latitude, longitude;
+    private double futureLatitude, futureLongitude;
     private String name;
 
     @Override
@@ -32,6 +35,8 @@ public class SatelliteMap extends FragmentActivity implements OnMapReadyCallback
         name = callingIntent.getStringExtra("name");
         latitude = callingIntent.getDoubleExtra("latitude", 0.0);
         longitude = callingIntent.getDoubleExtra("longitude", 0.0);
+        futureLatitude = callingIntent.getDoubleExtra("futureLatitude", 0.0);
+        futureLongitude = callingIntent.getDoubleExtra("futureLongitude", 0.0);
     }
 
 
@@ -48,9 +53,16 @@ public class SatelliteMap extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
+        // Add a marker at the satellite location and move the camera
         LatLng satelliteLatLng = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions().position(satelliteLatLng).title(name));
+        PolylineOptions orbit = new PolylineOptions()
+            .add(satelliteLatLng)
+            .add(new LatLng(futureLatitude, futureLongitude))
+            .width(10.0f)
+            .color(Color.YELLOW)
+            .geodesic(true);
+        mMap.addPolyline(orbit);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(satelliteLatLng));
     }
 }
